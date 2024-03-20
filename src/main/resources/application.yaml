@@ -1,5 +1,5 @@
 spring:
   datasource:
-    url: jdbc:mysql://124.70.43.180:53306/auth_user?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=GMT%2B8
-    username: dev
-    password: ME6Lhbh96r0Wj8fj4Xap0Po9Mk
+    url: jdbc:mysql://127.0.0.1:3306/auth?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: lz1024cx
