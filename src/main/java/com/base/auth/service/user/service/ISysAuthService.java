@@ -19,5 +19,5 @@ public interface ISysAuthService extends IService<SysAuth> {
 
     AddUserRes add(AddUserReq addUserReq) throws Exception;
 
-    AuthResTo login(AuthReqTo authReq) throws Exception;
+    AuthResTo login(AuthReqTo authReq);
 }

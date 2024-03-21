@@ -13,6 +13,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 /**
  * @author liuzheng
@@ -56,4 +58,11 @@ public class CorpController {
     Response<Page<CorpInfoDetail>> queryList(@Validated @RequestBody CorpQueryReq corpQueryReq) {
         return Response.ok(iCorpInfoService.queryList(corpQueryReq));
     }
+
+    @RequestMapping(value = "/export-corp-list", method = RequestMethod.POST)
+    @ApiOperation(value = "导出公司列表", notes = "导出订单使用列表", produces = "application/octet-stream")
+    void exportCorpList(@Valid @RequestBody CorpQueryReq corpQueryReq, HttpServletResponse response){
+         iCorpInfoService.exportCorpList(corpQueryReq,response);
+    }
+
 }

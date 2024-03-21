@@ -7,6 +7,8 @@ import com.base.auth.to.CorpInfoDetail;
 import com.base.auth.to.CorpQueryReq;
 import com.base.auth.to.SaveCorpInfoReq;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * <p>
  * 公司信息表 服务类
@@ -26,4 +28,6 @@ public interface ICorpInfoService extends IService<CorpInfo> {
     boolean add(SaveCorpInfoReq saveCorpInfoReq);
 
     boolean deleteCorp(Integer id);
+
+    void exportCorpList(CorpQueryReq corpQueryReq, HttpServletResponse response);
 }

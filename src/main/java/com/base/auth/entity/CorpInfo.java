@@ -31,9 +31,9 @@ public class CorpInfo implements Serializable {
     private Integer id;
 
     /**
-     * 公司名称
+     * 领域分类
      */
-    private String companyName;
+    private String categoryName;
 
     /**
      * 所属区
@@ -51,22 +51,28 @@ public class CorpInfo implements Serializable {
     private String companyCode;
 
     /**
+     * 公司名称
+     */
+    private String companyName;
+
+    /**
      * 注册资本
      */
     private String registeredCapital;
 
     /**
-     * 企业资本
+     * 企业资质 高新企业 1， 专精特新 2
      */
-    private String capital;
+    private Integer qualifications;
+
 
     /**
-     * 企业资质
+     * 是否参与项目 1:是，0否
      */
-    private String qualifications;
+    private Integer participateOld;
 
     /**
-     * 是否纳统;1:是，0否
+     * 是否纳统 1:是，0否
      */
     private Integer isStatistical;
 
@@ -76,24 +82,33 @@ public class CorpInfo implements Serializable {
     private String statisticalIndustry;
 
     /**
-     * 是否参与老03
+     * 名称
      */
-    private Integer participateOld;
+    private String subName;
 
     /**
-     * 企业方案
+     * 二级分类代码
      */
-    private String businessPlan;
+    private String subCategoryCode;
+    /**
+     * 二级分类名称
+     */
+    private String subCategoryName;
+
+    /**
+     * 专业
+     */
+    private String major;
+
+    /**
+     * 单列 研究机构 1，代加工企业2，通信核心企业3，通信相关企业4
+     */
+    private Integer type;
 
     /**
      * 主要产品
      */
     private String mainProducts;
-
-    /**
-     * 名词解释
-     */
-    private String termExplanation;
 
     /**
      * 创建时间
@@ -129,6 +144,27 @@ public class CorpInfo implements Serializable {
      * 删除标记 0未删除 1已删除
      */
     private Integer delFlag;
+
+
+
+
+
+
+    /**
+     * 企业资本
+     */
+    private String capital;
+
+    /**
+     * 企业方案
+     */
+    private String businessPlan;
+
+
+    /**
+     * 名词解释
+     */
+    private String termExplanation;
 
 
 }

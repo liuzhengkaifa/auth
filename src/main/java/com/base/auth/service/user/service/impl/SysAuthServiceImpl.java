@@ -3,8 +3,10 @@ package com.base.auth.service.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.base.auth.common.BizException;
 import com.base.auth.entity.SecurityQuestion;
 import com.base.auth.entity.SysAuth;
+import com.base.auth.enums.AuthErrorCodeEnum;
 import com.base.auth.enums.DelFlagEnum;
 import com.base.auth.enums.StatusEnum;
 import com.base.auth.mapper.SysAuthMapper;
@@ -57,18 +59,18 @@ public class SysAuthServiceImpl extends ServiceImpl<SysAuthMapper, SysAuth> impl
     }
 
     @Override
-    public AuthResTo login(AuthReqTo authReq) throws Exception {
+    public AuthResTo login(AuthReqTo authReq){
         AuthResTo authResTo = new AuthResTo();
         List<SysAuth> list = this.list(new LambdaQueryWrapper<SysAuth>()
                 .eq(SysAuth::getDelFlag, DelFlagEnum.NOT_DELETE.getValue())
                 .eq(SysAuth::getPrincipal, authReq.getPrincipal())
                 .eq(SysAuth::getCredential, authReq.getCredential()));
 
-        if(CollectionUtils.isNotEmpty(list)){
+        if (CollectionUtils.isNotEmpty(list)) {
             SysAuth sysAuth = list.get(0);
-            BeanUtils.copyProperties(sysAuth,authResTo);
-        }else {
-            throw new Exception("用户名或密码输入错误");
+            BeanUtils.copyProperties(sysAuth, authResTo);
+        } else {
+            throw new BizException(AuthErrorCodeEnum.USER_LOGIN_ERROR);
         }
         return authResTo;
     }

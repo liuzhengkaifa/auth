@@ -1,23 +1,32 @@
 package com.base.auth.service.corp.service.impl;
 
+import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.base.auth.common.BizException;
+import com.base.auth.convert.LocalDateConverter;
+import com.base.auth.convert.LocalDateTimeConverter;
 import com.base.auth.entity.CorpInfo;
 import com.base.auth.enums.DelFlagEnum;
+import com.base.auth.enums.ErrorCodeEnum;
 import com.base.auth.mapper.CorpInfoMapper;
 import com.base.auth.service.corp.service.ICorpInfoService;
 import com.base.auth.to.CorpInfoDetail;
 import com.base.auth.to.CorpQueryReq;
 import com.base.auth.to.SaveCorpInfoReq;
+import com.base.auth.to.excel.CorpInfoDetailExcelTo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,6 +66,10 @@ public class CorpInfoServiceImpl extends ServiceImpl<CorpInfoMapper, CorpInfo> i
         LambdaQueryWrapper lambdaQueryWrapper = new LambdaQueryWrapper<CorpInfo>()
                 .eq(CorpInfo::getDelFlag, DelFlagEnum.NOT_DELETE)
                 .like(StringUtils.isNotBlank(corpQueryReq.getCompanyName()), CorpInfo::getCompanyName, corpQueryReq.getCompanyName())
+                .like(StringUtils.isNotBlank(corpQueryReq.getCategoryName()), CorpInfo::getCategoryName, corpQueryReq.getCategoryName())
+                .like(StringUtils.isNotBlank(corpQueryReq.getDistrict()), CorpInfo::getDistrict, corpQueryReq.getDistrict())
+                .eq(ObjectUtils.isNotNull(corpQueryReq.getParticipateOld()), CorpInfo::getParticipateOld, corpQueryReq.getParticipateOld())
+                .eq(ObjectUtils.isNotNull(corpQueryReq.getIsStatistical()), CorpInfo::getIsStatistical, corpQueryReq.getIsStatistical())
                 .orderByDesc(CorpInfo::getUpdateTime);
 
         Page pageDto = this.page(page, lambdaQueryWrapper);
@@ -95,5 +108,30 @@ public class CorpInfoServiceImpl extends ServiceImpl<CorpInfoMapper, CorpInfo> i
         return this.update(new LambdaUpdateWrapper<CorpInfo>()
                 .set(CorpInfo::getDelFlag, DelFlagEnum.DELETED.getValue())
                 .eq(CorpInfo::getId, id));
+    }
+
+    @Override
+    public void exportCorpList(CorpQueryReq corpQueryReq, HttpServletResponse response) {
+        try {
+            corpQueryReq.setCurrent(1L);
+            corpQueryReq.setSize(10000L);
+            List<CorpInfoDetail> corpInfoDetailList = this.queryList(corpQueryReq).getRecords();
+            List<CorpInfoDetailExcelTo> excelToList = corpInfoDetailList.stream().map(x -> {
+                CorpInfoDetailExcelTo corpInfoDetailExcelTo = new CorpInfoDetailExcelTo();
+                BeanUtils.copyProperties(x, corpInfoDetailExcelTo);
+                return corpInfoDetailExcelTo;
+            }).collect(Collectors.toList());
+            response.setContentType("application/vnd.ms-excel");
+            response.setCharacterEncoding("utf-8");
+            String file = "企业信息" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+            String fileName = URLEncoder
+                    .encode(file + ".xlsx", StandardCharsets.UTF_8).replaceAll("\\+", "%20").replaceAll("-", "");
+            response.setHeader("Content-Disposition", "attachment;filename*=utf-8''" + fileName);
+            EasyExcel.write(response.getOutputStream(), CorpInfoDetailExcelTo.class)
+                    .registerConverter(new LocalDateTimeConverter()).registerConverter(new LocalDateConverter()).sheet("企业信息").doWrite(excelToList);
+        } catch (Exception e) {
+            log.error("导出文件异常", e);
+            throw new BizException(ErrorCodeEnum.UNKNOWN_ERROR.getCode(), ErrorCodeEnum.UNKNOWN_ERROR.getMessage());
+        }
     }
 }

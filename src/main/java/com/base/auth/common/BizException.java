@@ -5,6 +5,9 @@ package com.base.auth.common;
  * @date 2024年03月21日 10:58
  * @Description TODO
  */
+
+import com.base.auth.enums.AuthErrorCodeEnum;
+
 /**
  * @description: 自定义异常类
  * @author: MrVK
@@ -32,6 +35,11 @@ public class BizException extends RuntimeException{
         super(errorInfoInterface.getResultCode());
         this.errorCode = errorInfoInterface.getResultCode();
         this.errorMsg = errorInfoInterface.getResultMsg();
+    }
+
+    public BizException(AuthErrorCodeEnum authErrorCodeEnum) {
+        this.errorCode = authErrorCodeEnum.getCode();
+        this.errorMsg = authErrorCodeEnum.getMessage();
     }
 
     public BizException(BaseErrorInfoInterface errorInfoInterface, Throwable cause) {
