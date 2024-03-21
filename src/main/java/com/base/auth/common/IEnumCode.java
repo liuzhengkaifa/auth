@@ -2,6 +2,7 @@ package com.base.auth.common;
 
 /**
  * 枚举接口
+ *
  * @param <T>
  */
 public interface IEnumCode<T> {

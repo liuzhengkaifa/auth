@@ -59,7 +59,7 @@ public class SysAuthServiceImpl extends ServiceImpl<SysAuthMapper, SysAuth> impl
     }
 
     @Override
-    public AuthResTo login(AuthReqTo authReq){
+    public AuthResTo login(AuthReqTo authReq) {
         AuthResTo authResTo = new AuthResTo();
         List<SysAuth> list = this.list(new LambdaQueryWrapper<SysAuth>()
                 .eq(SysAuth::getDelFlag, DelFlagEnum.NOT_DELETE.getValue())

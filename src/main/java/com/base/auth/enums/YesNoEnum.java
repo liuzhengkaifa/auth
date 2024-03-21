@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum YesNoEnum {
-    NO(0,"否"),
-    YES(1,"是");
+    NO(0, "否"),
+    YES(1, "是");
 
     private Integer code;
 

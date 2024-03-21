@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 /**
  * @author liuzheng
  * @date 2024年03月20日 10:46
- * @Description TODO
+ * @Description 
  */
 @Data
 public class CorpInfoDetail {
@@ -159,22 +159,22 @@ public class CorpInfoDetail {
     private String updateUserName;
 
 
-    public void setIsStatistical(Integer isStatistical){
-        this.isStatistical= isStatistical;
+    public void setIsStatistical(Integer isStatistical) {
+        this.isStatistical = isStatistical;
         this.isStatisticalDesc = YesNoEnum.getNameByCode(isStatistical);
     }
 
-    public void setQualifications(Integer qualifications){
-        this.qualifications= qualifications;
+    public void setQualifications(Integer qualifications) {
+        this.qualifications = qualifications;
         this.qualificationsDesc = QualificationTypeEnum.getNameByCode(qualifications);
     }
 
-    public void setParticipateOld(Integer participateOld){
+    public void setParticipateOld(Integer participateOld) {
         this.participateOld = participateOld;
         this.participateOldDesc = YesNoEnum.getNameByCode(participateOld);
     }
 
-    public void setType(Integer type){
+    public void setType(Integer type) {
         this.type = type;
         this.typeDesc = TypeNameEnum.getNameByCode(type);
     }

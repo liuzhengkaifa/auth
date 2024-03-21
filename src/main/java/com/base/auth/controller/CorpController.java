@@ -19,7 +19,7 @@ import javax.validation.Valid;
 /**
  * @author liuzheng
  * @date 2024年03月20日 10:49
- * @Description TODO
+ * @Description 
  */
 @RestController
 @RequestMapping("/corp")
@@ -32,9 +32,9 @@ public class CorpController {
     @RequestMapping(value = "/save-update", method = RequestMethod.POST)
     @ApiOperation(value = "新增编辑公司", httpMethod = "POST")
     Response add(@Validated @RequestBody SaveCorpInfoReq saveCorpInfoReq) {
-        if(ObjectUtils.isNull(saveCorpInfoReq.getId())){
+        if (ObjectUtils.isNull(saveCorpInfoReq.getId())) {
             iCorpInfoService.add(saveCorpInfoReq);
-        }else{
+        } else {
             iCorpInfoService.edit(saveCorpInfoReq);
         }
         return Response.ok();
@@ -61,8 +61,8 @@ public class CorpController {
 
     @RequestMapping(value = "/export-corp-list", method = RequestMethod.POST)
     @ApiOperation(value = "导出公司列表", notes = "导出订单使用列表", produces = "application/octet-stream")
-    void exportCorpList(@Valid @RequestBody CorpQueryReq corpQueryReq, HttpServletResponse response){
-         iCorpInfoService.exportCorpList(corpQueryReq,response);
+    void exportCorpList(@Valid @RequestBody CorpQueryReq corpQueryReq, HttpServletResponse response) {
+        iCorpInfoService.exportCorpList(corpQueryReq, response);
     }
 
 }

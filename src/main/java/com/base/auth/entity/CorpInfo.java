@@ -146,10 +146,6 @@ public class CorpInfo implements Serializable {
     private Integer delFlag;
 
 
-
-
-
-
     /**
      * 企业资本
      */

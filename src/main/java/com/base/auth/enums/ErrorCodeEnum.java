@@ -3,7 +3,7 @@ package com.base.auth.enums;
 /**
  * @author liuzheng
  * @date 2024年03月20日 10:26
- * @Description TODO
+ * @Description 
  */
 public enum ErrorCodeEnum {
     UNKNOWN_ERROR("00000", "未知系统异常"),

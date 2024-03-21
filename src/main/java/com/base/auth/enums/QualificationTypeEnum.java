@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum QualificationTypeEnum {
-    GXQY(0,"高新企业"),
-    ZZTX(1,"专精特新");
+    GXQY(0, "高新企业"),
+    ZZTX(1, "专精特新");
 
     private Integer code;
 

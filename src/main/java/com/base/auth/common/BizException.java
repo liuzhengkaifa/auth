@@ -1,20 +1,14 @@
 package com.base.auth.common;
 
+
+import com.base.auth.enums.AuthErrorCodeEnum;
 /**
  * @author liuzheng
  * @date 2024年03月21日 10:58
- * @Description TODO
+ * @Description 
  */
 
-import com.base.auth.enums.AuthErrorCodeEnum;
-
-/**
- * @description: 自定义异常类
- * @author: MrVK
- * @date: 2021/4/19 21:44
- * @version: v1.0
- */
-public class BizException extends RuntimeException{
+public class BizException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 

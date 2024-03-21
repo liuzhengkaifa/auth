@@ -6,10 +6,10 @@ import lombok.Data;
 /**
  * @author liuzheng
  * @date 2024年03月20日 10:47
- * @Description TODO
+ * @Description 
  */
 @Data
-public class CorpQueryReq  extends PageRequestTO {
+public class CorpQueryReq extends PageRequestTO {
 
 
     /**

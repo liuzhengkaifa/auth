@@ -30,7 +30,7 @@ public class UserController {
 
     @PostMapping("/login")
     @ApiOperation(value = "登录认证", httpMethod = "POST")
-    Response<AuthResTo> login(@Validated @RequestBody AuthReqTo authReq){
+    Response<AuthResTo> login(@Validated @RequestBody AuthReqTo authReq) {
         return Response.ok(iSysAuthService.login(authReq));
     }
 }

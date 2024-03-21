@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * @author liuzheng
  * @date 2024年03月20日 15:56
- * @Description TODO
+ * @Description 
  */
 @Configuration
 public class MyBatisPlusConfig {

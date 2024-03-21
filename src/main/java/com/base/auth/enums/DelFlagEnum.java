@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum DelFlagEnum {
-    NOT_DELETE(0,"未删除"),
-    DELETED(1,"已删除");
+    NOT_DELETE(0, "未删除"),
+    DELETED(1, "已删除");
 
     private Integer value;
 
