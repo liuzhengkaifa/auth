@@ -15,11 +15,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author liuzheng
  * @date 2024年03月20日 10:49
- * @Description 
+ * @Description
  */
 @RestController
 @RequestMapping("/corp")
@@ -43,13 +44,13 @@ public class CorpController {
 
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     @ApiOperation(value = "查看公司信息", httpMethod = "GET")
-    Response<CorpInfoDetail> detail(@RequestParam(value = "id", required = true) Integer id) {
+    Response<CorpInfoDetail> detail(@RequestParam(value = "id", required = true) @NotNull Integer id) {
         return Response.ok(iCorpInfoService.detail(id));
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     @ApiOperation(value = "删除公司信息", httpMethod = "GET")
-    Response deleteCorp(@RequestParam(value = "id", required = true) Integer id) {
+    Response deleteCorp(@RequestParam(value = "id", required = true) @NotNull Integer id) {
         return Response.ok(iCorpInfoService.deleteCorp(id));
     }
 
