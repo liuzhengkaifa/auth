@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.base.auth.common.BizException;
 import com.base.auth.entity.CorpInfo;
 import com.base.auth.enums.DelFlagEnum;
 import com.base.auth.mapper.CorpInfoMapper;
@@ -33,13 +34,13 @@ public class CorpInfoServiceImpl extends ServiceImpl<CorpInfoMapper, CorpInfo> i
 
     @Override
     public CorpInfoDetail detail(Integer id) {
-        CorpInfoDetail corpInfoDeatil = new CorpInfoDetail();
+        CorpInfoDetail corpInfoDetail = new CorpInfoDetail();
         CorpInfo corpInfo = this.getById(id);
-        if (corpInfo.getDelFlag().equals(DelFlagEnum.DELETED.getValue())) {
-            return null;
+        if (ObjectUtils.isNull(corpInfo) || corpInfo.getDelFlag().equals(DelFlagEnum.DELETED.getValue())) {
+            throw new BizException("公司不存在");
         }
-        BeanUtils.copyProperties(corpInfo, corpInfoDeatil);
-        return corpInfoDeatil;
+        BeanUtils.copyProperties(corpInfo, corpInfoDetail);
+        return corpInfoDetail;
     }
 
     @Override

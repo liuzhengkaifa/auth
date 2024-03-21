@@ -1,5 +1,6 @@
 package com.base.auth.common;
 
+import com.base.auth.enums.ErrorCodeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

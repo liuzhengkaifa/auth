@@ -1,4 +1,4 @@
-package com.base.auth.common;
+package com.base.auth.enums;
 
 /**
  * @author liuzheng
