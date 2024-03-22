@@ -122,7 +122,7 @@ public class CorpInfoDetailExcelTo {
      */
     @ApiModelProperty(value = "企业性质备注 研究机构 1，代加工企业2，通信核心企业3，通信相关企业4")
     @ExcelProperty(value = "企业性质备注")
-    private Integer typeDesc;
+    private String typeDesc;
 
     /**
      * 主要产品
