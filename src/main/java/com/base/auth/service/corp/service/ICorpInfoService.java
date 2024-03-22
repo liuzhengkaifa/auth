@@ -3,6 +3,7 @@ package com.base.auth.service.corp.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.base.auth.entity.CorpInfo;
+import com.base.auth.entity.SysAuth;
 import com.base.auth.to.CorpInfoDetail;
 import com.base.auth.to.CorpQueryReq;
 import com.base.auth.to.SaveCorpInfoReq;
@@ -23,11 +24,11 @@ public interface ICorpInfoService extends IService<CorpInfo> {
 
     Page<CorpInfoDetail> queryList(CorpQueryReq corpQueryReq);
 
-    boolean edit(SaveCorpInfoReq saveCorpInfoReq);
+    boolean edit(SaveCorpInfoReq saveCorpInfoReq, SysAuth sysAuth);
 
-    boolean add(SaveCorpInfoReq saveCorpInfoReq);
+    boolean add(SaveCorpInfoReq saveCorpInfoReq, SysAuth sysAuth);
 
-    boolean deleteCorp(Integer id);
+    boolean deleteCorp(Integer id, SysAuth sysAuth);
 
     void exportCorpList(CorpQueryReq corpQueryReq, HttpServletResponse response);
 }

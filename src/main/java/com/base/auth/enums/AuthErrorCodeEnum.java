@@ -4,7 +4,7 @@ import com.base.auth.common.IEnumCode;
 
 public enum AuthErrorCodeEnum implements IEnumCode {
     USER_LOGIN_ERROR("30000", "用户名/密码错误"),
-    ;
+    NOT_LOGIN("401", "尚未登录，请先登录");
 
     private String code;
     private String message;

@@ -11,6 +11,7 @@ import com.base.auth.common.BizException;
 import com.base.auth.convert.LocalDateConverter;
 import com.base.auth.convert.LocalDateTimeConverter;
 import com.base.auth.entity.CorpInfo;
+import com.base.auth.entity.SysAuth;
 import com.base.auth.enums.DelFlagEnum;
 import com.base.auth.enums.ErrorCodeEnum;
 import com.base.auth.mapper.CorpInfoMapper;
@@ -43,6 +44,8 @@ public class CorpInfoServiceImpl extends ServiceImpl<CorpInfoMapper, CorpInfo> i
 
     @Override
     public CorpInfoDetail detail(Integer id) {
+
+
         CorpInfoDetail corpInfoDetail = new CorpInfoDetail();
         CorpInfo corpInfo = this.getById(id);
         if (ObjectUtils.isNull(corpInfo) || corpInfo.getDelFlag().equals(DelFlagEnum.DELETED.getValue())) {
@@ -85,28 +88,40 @@ public class CorpInfoServiceImpl extends ServiceImpl<CorpInfoMapper, CorpInfo> i
     }
 
     @Override
-    public boolean edit(SaveCorpInfoReq saveCorpInfoReq) {
+    public boolean edit(SaveCorpInfoReq saveCorpInfoReq, SysAuth sysAuth) {
         CorpInfo corpInfo = this.getById(saveCorpInfoReq.getId());
         if (ObjectUtils.isNull(corpInfo)) {
             return false;
         }
         BeanUtils.copyProperties(saveCorpInfoReq, corpInfo);
+        corpInfo.setUpdateTime(LocalDateTime.now());
+        corpInfo.setUpdateUserId(sysAuth.getId());
+        corpInfo.setUpdateUserName(sysAuth.getPrincipal());
         return this.updateById(corpInfo);
     }
 
     @Override
-    public boolean add(SaveCorpInfoReq saveCorpInfoReq) {
+    public boolean add(SaveCorpInfoReq saveCorpInfoReq, SysAuth sysAuth) {
         CorpInfo corpInfo = new CorpInfo();
         BeanUtils.copyProperties(saveCorpInfoReq, corpInfo);
         corpInfo.setCreateUserId(saveCorpInfoReq.getUpdateUserId());
         corpInfo.setCreateUserName(saveCorpInfoReq.getCompanyName());
+        corpInfo.setCreateTime(LocalDateTime.now());
+        corpInfo.setCreateUserId(sysAuth.getId());
+        corpInfo.setCreateUserName(sysAuth.getPrincipal());
+        corpInfo.setUpdateTime(LocalDateTime.now());
+        corpInfo.setUpdateUserId(sysAuth.getId());
+        corpInfo.setUpdateUserName(sysAuth.getPrincipal());
         return this.save(corpInfo);
     }
 
     @Override
-    public boolean deleteCorp(Integer id) {
+    public boolean deleteCorp(Integer id, SysAuth sysAuth) {
         return this.update(new LambdaUpdateWrapper<CorpInfo>()
                 .set(CorpInfo::getDelFlag, DelFlagEnum.DELETED.getValue())
+                .set(CorpInfo::getUpdateTime, LocalDateTime.now())
+                .set(CorpInfo::getUpdateUserId, sysAuth.getId())
+                .set(CorpInfo::getUpdateUserName, sysAuth.getPrincipal())
                 .eq(CorpInfo::getId, id));
     }
 

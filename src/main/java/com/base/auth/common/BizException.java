@@ -2,10 +2,11 @@ package com.base.auth.common;
 
 
 import com.base.auth.enums.AuthErrorCodeEnum;
+
 /**
  * @author liuzheng
  * @date 2024年03月21日 10:58
- * @Description 
+ * @Description
  */
 
 public class BizException extends RuntimeException {

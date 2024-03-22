@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 /**
  * @author liuzheng
  * @date 2024年03月20日 10:46
- * @Description 
+ * @Description
  */
 @Data
 public class CorpInfoDetail {

@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * @author liuzheng
  * @date 2024年03月20日 10:49
- * @Description 
+ * @Description
  */
 @Data
 public class AuthResTo {
@@ -15,4 +15,7 @@ public class AuthResTo {
 
     @ApiModelProperty(value = "用户名")
     private String principal;
+
+    @ApiModelProperty(value = "token")
+    private String token;
 }

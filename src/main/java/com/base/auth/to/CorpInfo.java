@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * @author liuzheng
  * @date 2024年03月20日 10:33
- * @Description 
+ * @Description
  */
 @Data
 public class CorpInfo {

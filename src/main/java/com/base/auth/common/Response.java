@@ -4,6 +4,7 @@ import com.base.auth.enums.ErrorCodeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -11,10 +12,11 @@ import java.lang.reflect.Method;
 /**
  * @author liuzheng
  * @date 2024年03月20日 10:23
- * @Description 
+ * @Description
  */
 
 @ApiModel("接口公共响应")
+@Data
 public class Response<T> implements Serializable {
     @ApiModelProperty("成功标识，true：成功，false：失败")
     private boolean success = true;

@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * @author liuzheng
  * @date 2024年03月20日 10:21
- * @Description 
+ * @Description
  */
 @Data
 public class AddUserRes {

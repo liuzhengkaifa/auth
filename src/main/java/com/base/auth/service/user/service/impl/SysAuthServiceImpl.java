@@ -16,6 +16,7 @@ import com.base.auth.to.AddUserReq;
 import com.base.auth.to.AddUserRes;
 import com.base.auth.to.AuthReqTo;
 import com.base.auth.to.AuthResTo;
+import com.base.auth.util.TokenUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,6 +70,9 @@ public class SysAuthServiceImpl extends ServiceImpl<SysAuthMapper, SysAuth> impl
         if (CollectionUtils.isNotEmpty(list)) {
             SysAuth sysAuth = list.get(0);
             BeanUtils.copyProperties(sysAuth, authResTo);
+
+            String token = TokenUtils.sign(sysAuth);
+            authResTo.setToken(token);
         } else {
             throw new BizException(AuthErrorCodeEnum.USER_LOGIN_ERROR);
         }
