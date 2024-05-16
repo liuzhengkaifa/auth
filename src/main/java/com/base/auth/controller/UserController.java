@@ -24,8 +24,8 @@ public class UserController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ApiOperation(value = "添加系统用户数据", httpMethod = "POST")
-    Response<AddUserRes> add(@Validated @RequestBody AddUserReq addUserReq) throws Exception {
-        return Response.ok(iSysAuthService.add(addUserReq));
+    Response<AddUserRes> register(@Validated @RequestBody AddUserReq addUserReq) throws Exception {
+        return Response.ok(iSysAuthService.register(addUserReq));
     }
 
     @PostMapping("/login")

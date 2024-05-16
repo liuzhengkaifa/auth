@@ -17,7 +17,14 @@ import com.base.auth.to.AuthResTo;
  */
 public interface ISysAuthService extends IService<SysAuth> {
 
-    AddUserRes add(AddUserReq addUserReq) throws Exception;
+    AddUserRes register(AddUserReq addUserReq) throws Exception;
 
     AuthResTo login(AuthReqTo authReq);
+    /**
+     * 根据登录账号查询注册信息。
+     *
+     * @param principal 登录账号。
+     * @return SysAuth 注册信息。
+     */
+    SysAuth findByPrincipal(String principal);
 }

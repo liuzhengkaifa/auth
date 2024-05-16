@@ -13,8 +13,8 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class AddUserReq {
 
-    @ApiModelProperty(value = "用户名", required = true)
-    @NotBlank(message = "用户名不能为空")
+    @ApiModelProperty(value = "登录账号", required = true)
+    @NotBlank(message = "登录账号不能为空")
     private String principal;
 
     /**
@@ -23,19 +23,5 @@ public class AddUserReq {
     @ApiModelProperty(value = "密码", required = true)
     @NotBlank(message = "密码不能为空")
     private String credential;
-
-    /**
-     * 问题
-     */
-    @ApiModelProperty(value = "密保问题", required = true)
-    @NotBlank(message = "密保问题不能为空")
-    private String question;
-
-    /**
-     * 答案
-     */
-    @ApiModelProperty(value = "密保答案", required = true)
-    @NotBlank(message = "密保答案不能为空")
-    private String answer;
 
 }
