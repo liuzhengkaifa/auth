@@ -4,11 +4,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.base.auth.entity.CorpInfo;
 import com.base.auth.entity.SysAuth;
-import com.base.auth.to.CorpInfoDetail;
-import com.base.auth.to.CorpQueryReq;
-import com.base.auth.to.SaveCorpInfoReq;
+import com.base.auth.to.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * <p>
@@ -31,4 +30,8 @@ public interface ICorpInfoService extends IService<CorpInfo> {
     boolean deleteCorp(Integer id, SysAuth sysAuth);
 
     void exportCorpList(CorpQueryReq corpQueryReq, HttpServletResponse response);
+
+    List<FocusAreasRes> focusAreas(SysAuth currentUser);
+
+    List<SpatialDistributionRes> spatialDistribution(SysAuth currentUser);
 }

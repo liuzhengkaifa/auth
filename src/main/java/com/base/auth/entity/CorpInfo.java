@@ -36,6 +36,16 @@ public class CorpInfo implements Serializable {
     private String categoryName;
 
     /**
+     * 所属区编码
+     */
+    private Integer districtCode;
+
+    /**
+     * 代表企业标记 0否 1是
+     */
+    private Integer representsCompanyFlag;
+
+    /**
      * 所属区
      */
     private String district;

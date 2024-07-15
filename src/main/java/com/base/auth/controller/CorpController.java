@@ -6,9 +6,7 @@ import com.base.auth.annotation.CurrentUser;
 import com.base.auth.common.Response;
 import com.base.auth.entity.SysAuth;
 import com.base.auth.service.corp.service.ICorpInfoService;
-import com.base.auth.to.CorpInfoDetail;
-import com.base.auth.to.CorpQueryReq;
-import com.base.auth.to.SaveCorpInfoReq;
+import com.base.auth.to.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +18,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author liuzheng
@@ -66,10 +65,24 @@ public class CorpController {
         return Response.ok(iCorpInfoService.queryList(corpQueryReq));
     }
 
+    @GetMapping("/focus-areas")
+    @ApiOperation(value = "获取重点领域分类的公司饼状图数据", httpMethod = "GET")
+    Response<List<FocusAreasRes>> focusAreas(@CurrentUser @ApiIgnore SysAuth currentUser) {
+        return Response.ok(iCorpInfoService.focusAreas(currentUser));
+    }
+
+    @GetMapping("/spatial-distribution")
+    @ApiOperation(value = "获取企业、项目、产品的空间分布", httpMethod = "GET")
+    Response<List<SpatialDistributionRes>> spatialDistribution(@CurrentUser @ApiIgnore SysAuth currentUser) {
+        return Response.ok(iCorpInfoService.spatialDistribution(currentUser));
+    }
+
     @RequestMapping(value = "/export-corp-list", method = RequestMethod.POST)
     @ApiOperation(value = "导出公司列表", notes = "导出订单使用列表", produces = "application/octet-stream")
     void exportCorpList(@Valid @RequestBody CorpQueryReq corpQueryReq, HttpServletResponse response) {
         iCorpInfoService.exportCorpList(corpQueryReq, response);
     }
+
+
 
 }

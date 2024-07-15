@@ -3,6 +3,7 @@ package com.base.auth.service.corp.service.impl;
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -14,11 +15,10 @@ import com.base.auth.entity.CorpInfo;
 import com.base.auth.entity.SysAuth;
 import com.base.auth.enums.DelFlagEnum;
 import com.base.auth.enums.ErrorCodeEnum;
+import com.base.auth.enums.YesNoEnum;
 import com.base.auth.mapper.CorpInfoMapper;
 import com.base.auth.service.corp.service.ICorpInfoService;
-import com.base.auth.to.CorpInfoDetail;
-import com.base.auth.to.CorpQueryReq;
-import com.base.auth.to.SaveCorpInfoReq;
+import com.base.auth.to.*;
 import com.base.auth.to.excel.CorpInfoDetailExcelTo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,9 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -148,5 +150,46 @@ public class CorpInfoServiceImpl extends ServiceImpl<CorpInfoMapper, CorpInfo> i
             log.error("导出文件异常", e);
             throw new BizException(ErrorCodeEnum.UNKNOWN_ERROR.getCode(), ErrorCodeEnum.UNKNOWN_ERROR.getMessage());
         }
+    }
+
+    @Override
+    public List<FocusAreasRes> focusAreas(SysAuth currentUser) {
+        List<FocusAreasRes> resList = new ArrayList<>();
+
+        List<CorpInfo> corpInfoList = this.list(new LambdaQueryWrapper<CorpInfo>()
+                .eq(CorpInfo::getDelFlag, DelFlagEnum.NOT_DELETE.getValue()));
+        Map<String, List<CorpInfo>> companyMap = corpInfoList.stream().collect(Collectors.groupingBy(CorpInfo::getCategoryName));
+        companyMap.forEach((key, value) -> {
+            if (StringUtils.isNotBlank(key)) {
+                FocusAreasRes res = new FocusAreasRes();
+                res.setCategoryName(key);
+                res.setCompanyCount(value.size());
+                res.setCompanyName(value.stream().map(x -> x.getCompanyName()).collect(Collectors.joining(",")));
+                resList.add(res);
+            }
+        });
+        return resList;
+    }
+
+    @Override
+    public List<SpatialDistributionRes> spatialDistribution(SysAuth currentUser) {
+        List<SpatialDistributionRes> resList = new ArrayList<>();
+        List<CorpInfo> corpInfoList = this.list(new LambdaQueryWrapper<CorpInfo>()
+                .eq(CorpInfo::getDelFlag, DelFlagEnum.NOT_DELETE.getValue()));
+        Map<Integer, List<CorpInfo>> companyMap = corpInfoList.stream().collect(Collectors.groupingBy(CorpInfo::getDistrictCode));
+        companyMap.forEach((key, value) -> {
+            if (ObjectUtils.isNotNull(key)) {
+                SpatialDistributionRes res = new SpatialDistributionRes();
+                res.setDistrictCode(key);
+                res.setDistrict(value.get(0).getDistrict());
+                List<CorpInfo> representsCompanyList = value.stream().filter(x -> x.getRepresentsCompanyFlag().equals(YesNoEnum.YES.getCode())).collect(Collectors.toList());
+                if (CollectionUtils.isNotEmpty(representsCompanyList)) {
+                    res.setCompanyCount(representsCompanyList.size());
+                    res.setCompanyName(representsCompanyList.stream().map(x -> x.getCompanyName()).collect(Collectors.joining(",")));
+                    resList.add(res);
+                }
+            }
+        });
+        return resList;
     }
 }
