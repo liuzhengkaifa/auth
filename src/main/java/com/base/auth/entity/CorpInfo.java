@@ -3,6 +3,7 @@ package com.base.auth.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -73,7 +74,7 @@ public class CorpInfo implements Serializable {
     /**
      * 企业资质 高新企业 1， 专精特新 2
      */
-    private Integer qualifications;
+    private String qualifications;
 
 
     /**
@@ -113,12 +114,30 @@ public class CorpInfo implements Serializable {
     /**
      * 单列 研究机构 1，代加工企业2，通信核心企业3，通信相关企业4
      */
-    private Integer type;
+    private String type;
 
     /**
      * 主要产品
      */
     private String mainProducts;
+
+    /**
+     * 国内外市场
+     */
+    @ApiModelProperty(value = "国内外市场")
+    private String domesticInternationalMarket;
+
+    /**
+     * 产品领先情况
+     */
+    @ApiModelProperty(value = "产品领先情况")
+    private String productLeadershipStatus;
+
+    /**
+     * 参加重点项目情况
+     */
+    @ApiModelProperty(value = "参加重点项目情况")
+    private String keyProjectParticipation;
 
     /**
      * 创建时间

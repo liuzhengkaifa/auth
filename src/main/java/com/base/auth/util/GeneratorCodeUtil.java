@@ -32,7 +32,7 @@ public class GeneratorCodeUtil {
 
     public static void main(String[] args) {
         String[][] tables = {
-                {"user", "sys_auth"}, {"corp", "corp_info"}, {"user", "security_question"}
+                {"user", "user_role_relation"}, {"user", "user_department"}
         };
         Arrays.stream(tables).forEach(table -> build(table[0], table[1]));
     }
@@ -62,7 +62,7 @@ public class GeneratorCodeUtil {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://101.132.140.20:3306:53306/data_sync?serverTimezone=UTC&useUnicode=true" +
+        dsc.setUrl("jdbc:mysql://101.132.140.20:3306/auth?serverTimezone=UTC&useUnicode=true" +
                 "&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");

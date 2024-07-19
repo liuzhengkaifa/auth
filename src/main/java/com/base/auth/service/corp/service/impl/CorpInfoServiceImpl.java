@@ -17,12 +17,14 @@ import com.base.auth.enums.DelFlagEnum;
 import com.base.auth.enums.ErrorCodeEnum;
 import com.base.auth.enums.YesNoEnum;
 import com.base.auth.mapper.CorpInfoMapper;
+import com.base.auth.service.common.service.ICommonBusiness;
 import com.base.auth.service.corp.service.ICorpInfoService;
 import com.base.auth.to.*;
 import com.base.auth.to.excel.CorpInfoDetailExcelTo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -44,6 +46,9 @@ import java.util.stream.Collectors;
 @Service
 public class CorpInfoServiceImpl extends ServiceImpl<CorpInfoMapper, CorpInfo> implements ICorpInfoService {
 
+    @Resource
+    ICommonBusiness iCommonBusiness;
+
     @Override
     public CorpInfoDetail detail(Integer id) {
 
@@ -58,7 +63,7 @@ public class CorpInfoServiceImpl extends ServiceImpl<CorpInfoMapper, CorpInfo> i
     }
 
     @Override
-    public Page<CorpInfoDetail> queryList(CorpQueryReq corpQueryReq) {
+    public Page<CorpInfoDetail> queryList(CorpQueryReq corpQueryReq,SysAuth sysAuth) {
         if (ObjectUtils.isNull(corpQueryReq.getCurrent()) || corpQueryReq.getCurrent() < 1) {
             corpQueryReq.setCurrent(1L);
         }
@@ -76,6 +81,21 @@ public class CorpInfoServiceImpl extends ServiceImpl<CorpInfoMapper, CorpInfo> i
                 .eq(ObjectUtils.isNotNull(corpQueryReq.getParticipateOld()), CorpInfo::getParticipateOld, corpQueryReq.getParticipateOld())
                 .eq(ObjectUtils.isNotNull(corpQueryReq.getIsStatistical()), CorpInfo::getIsStatistical, corpQueryReq.getIsStatistical())
                 .orderByDesc(CorpInfo::getUpdateTime);
+
+        //如果是区管理员，非超级管理员，只能查看指定区数据，如果是超级管理员，可以查看所有数据，否则只能查看自己创建的数据
+
+
+        iCommonBusiness.checkUserPermissions(sysAuth.getId());
+
+//        if (YesNoEnum.NO.getValue().equals(sysAuth.getIsSuperAdmin())) {
+//            if (StringUtils.isNotBlank(sysAuth.getDistrictCode())) {
+//                lambdaQueryWrapper.eq(CorpInfo::getDistrictCode, sysAuth.getDistrictCode());
+//            }
+//        }
+
+
+
+
 
         Page pageDto = this.page(page, lambdaQueryWrapper);
         List<CorpInfo> records = pageDto.getRecords();
@@ -132,7 +152,7 @@ public class CorpInfoServiceImpl extends ServiceImpl<CorpInfoMapper, CorpInfo> i
         try {
             corpQueryReq.setCurrent(1L);
             corpQueryReq.setSize(10000L);
-            List<CorpInfoDetail> corpInfoDetailList = this.queryList(corpQueryReq).getRecords();
+            List<CorpInfoDetail> corpInfoDetailList = this.queryList(corpQueryReq,null).getRecords();
             List<CorpInfoDetailExcelTo> excelToList = corpInfoDetailList.stream().map(x -> {
                 CorpInfoDetailExcelTo corpInfoDetailExcelTo = new CorpInfoDetailExcelTo();
                 BeanUtils.copyProperties(x, corpInfoDetailExcelTo);

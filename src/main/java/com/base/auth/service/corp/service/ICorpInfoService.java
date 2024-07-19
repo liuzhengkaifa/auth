@@ -21,7 +21,7 @@ public interface ICorpInfoService extends IService<CorpInfo> {
 
     CorpInfoDetail detail(Integer id);
 
-    Page<CorpInfoDetail> queryList(CorpQueryReq corpQueryReq);
+    Page<CorpInfoDetail> queryList(CorpQueryReq corpQueryReq,SysAuth sysAuth);
 
     boolean edit(SaveCorpInfoReq saveCorpInfoReq, SysAuth sysAuth);
 

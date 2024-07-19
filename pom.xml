@@ -112,6 +112,12 @@
             <artifactId>oapi-java-sdk</artifactId>
             <version>release-V4-2.1.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.31</version> <!-- 使用你所需的版本 -->
+        </dependency>
     </dependencies>
 
     <build>

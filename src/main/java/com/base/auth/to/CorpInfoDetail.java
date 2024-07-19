@@ -142,6 +142,24 @@ public class CorpInfoDetail {
     private String mainProducts;
 
     /**
+     * 国内外市场
+     */
+    @ApiModelProperty(value = "国内外市场")
+    private String domesticInternationalMarket;
+
+    /**
+     * 产品领先情况
+     */
+    @ApiModelProperty(value = "产品领先情况")
+    private String productLeadershipStatus;
+
+    /**
+     * 参加重点项目情况
+     */
+    @ApiModelProperty(value = "参加重点项目情况")
+    private String keyProjectParticipation;
+
+    /**
      * 修改时间
      */
     private LocalDateTime updateTime;

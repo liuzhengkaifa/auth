@@ -61,8 +61,8 @@ public class CorpController {
 
     @RequestMapping(value = "/query-list", method = RequestMethod.POST)
     @ApiOperation(value = "根据参数查询单据列表信息", httpMethod = "POST")
-    Response<Page<CorpInfoDetail>> queryList(@Validated @RequestBody CorpQueryReq corpQueryReq) {
-        return Response.ok(iCorpInfoService.queryList(corpQueryReq));
+    Response<Page<CorpInfoDetail>> queryList(@Validated @RequestBody CorpQueryReq corpQueryReq, @CurrentUser @ApiIgnore SysAuth currentUser) {
+        return Response.ok(iCorpInfoService.queryList(corpQueryReq,currentUser));
     }
 
     @GetMapping("/focus-areas")
