@@ -82,7 +82,4 @@ public class CorpController {
     void exportCorpList(@Valid @RequestBody CorpQueryReq corpQueryReq, HttpServletResponse response) {
         iCorpInfoService.exportCorpList(corpQueryReq, response);
     }
-
-
-
 }

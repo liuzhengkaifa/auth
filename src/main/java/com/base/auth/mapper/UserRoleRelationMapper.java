@@ -2,6 +2,10 @@ package com.base.auth.mapper;
 
 import com.base.auth.entity.UserRoleRelation;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.base.auth.to.UserPermissionRes;
+import com.base.auth.to.UserRoleDepartmentDto;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface UserRoleRelationMapper extends BaseMapper<UserRoleRelation> {
 
+    List<UserRoleDepartmentDto> findUserRoleRelationDepartment(Integer id);
 }

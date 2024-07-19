@@ -41,11 +41,11 @@ public class GeneratorCodeUtil {
         String projectPath = System.getProperty("user.dir");
         //获取模块名
         String moduleName = Strings.isBlank(module) ? scanner("请输入模块名") : module;
-        String entityDir = projectPath + "/auth-start/src/main/java/com/base/auth/entity/";
-        String mapperDir = projectPath + "/auth-start/src/main/java/com/base/auth/mapper/";
-        String mapperXmlDir = projectPath + "/auth-start/src/main/resources/mapper/";
-        String serviceDir = projectPath + "/auth-start/src/main/java/com/base/auth/service/" + moduleName + "/service/";
-        String serviceImplDir = projectPath + "/auth-start/src/main/java/com/base/auth/service/" + moduleName + "/service/impl";
+        String entityDir = projectPath + "/src/main/java/com/base/auth//entity/";
+        String mapperDir = projectPath + "/src/main/java/com/base/auth/mapper/";
+        String mapperXmlDir = projectPath + "/src/main/resources/mapper/";
+        String serviceDir = projectPath + "/src/main/java/com/base/auth/service/" + moduleName + "/service/";
+        String serviceImplDir = projectPath + "/src/main/java/com/base/auth/service/" + moduleName + "/service/impl";
 
         // 代码生成器
         AutoGenerator mpg = new AutoGenerator();

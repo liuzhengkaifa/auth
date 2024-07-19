@@ -15,5 +15,12 @@
         <result column="update_user_name" property="updateUserName" />
         <result column="del_flag" property="delFlag" />
     </resultMap>
+    <select id="findUserRoleRelationDepartment" resultType="com.base.auth.to.UserRoleDepartmentDto">
+        select urr.role_id roleId,ud.department_id departmentId,sa.id authId from sys_auth sa
+         left join auth.user_role_relation urr on sa.id = urr.user_id
+         left join auth.user_department ud on sa.id = ud.user_id and ud.del_flag = 0
+        where sa.del_flag = 0 and urr.del_flag = 0
+          and sa.id = #{id}
+    </select>
 
 </mapper>

@@ -3,6 +3,8 @@ package com.base.auth.to;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author liuzheng
  * @date 2024年03月20日 10:46
@@ -11,20 +13,20 @@ import lombok.Data;
 @Data
 public class UserPermissionRes {
     /**
-     * 用户id
+     * 是否超级管理员
      */
-    @ApiModelProperty(value = "用户id")
-    private Integer authId;
+    @ApiModelProperty(value = "是否超级管理员")
+    private boolean isSuperAdmin;
 
     /**
-     * 角色id
+     * 是否区管理员
      */
-    @ApiModelProperty(value = "角色id")
-    private Integer roleId;
+    @ApiModelProperty(value = "是否区管理员")
+    private boolean isSysAdmin;
 
     /**
-     * 部门id
+     * 管理的区id
      */
-    @ApiModelProperty(value = "部门id")
-    private Integer departmentId;
+    @ApiModelProperty(value = "管理的区id")
+    private List<Integer> ids;
 }

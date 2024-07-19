@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ICommonBusiness {
 
-    List<UserPermissionRes> checkUserPermissions(Integer id);
+    UserPermissionRes checkUserPermissions(Integer id);
 }

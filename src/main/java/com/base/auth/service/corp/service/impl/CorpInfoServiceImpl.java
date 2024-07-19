@@ -73,30 +73,29 @@ public class CorpInfoServiceImpl extends ServiceImpl<CorpInfoMapper, CorpInfo> i
 
         Page<CorpInfo> page = new Page<>(corpQueryReq.getCurrent(), corpQueryReq.getSize());
         Page<CorpInfoDetail> resPage = new Page<>(corpQueryReq.getCurrent(), corpQueryReq.getSize());
-        LambdaQueryWrapper lambdaQueryWrapper = new LambdaQueryWrapper<CorpInfo>()
+        LambdaQueryWrapper<CorpInfo> lambdaQueryWrapper = new LambdaQueryWrapper<CorpInfo>()
                 .eq(CorpInfo::getDelFlag, DelFlagEnum.NOT_DELETE)
                 .like(StringUtils.isNotBlank(corpQueryReq.getCompanyName()), CorpInfo::getCompanyName, corpQueryReq.getCompanyName())
                 .like(StringUtils.isNotBlank(corpQueryReq.getCategoryName()), CorpInfo::getCategoryName, corpQueryReq.getCategoryName())
                 .like(StringUtils.isNotBlank(corpQueryReq.getDistrict()), CorpInfo::getDistrict, corpQueryReq.getDistrict())
                 .eq(ObjectUtils.isNotNull(corpQueryReq.getParticipateOld()), CorpInfo::getParticipateOld, corpQueryReq.getParticipateOld())
-                .eq(ObjectUtils.isNotNull(corpQueryReq.getIsStatistical()), CorpInfo::getIsStatistical, corpQueryReq.getIsStatistical())
-                .orderByDesc(CorpInfo::getUpdateTime);
+                .eq(ObjectUtils.isNotNull(corpQueryReq.getIsStatistical()), CorpInfo::getIsStatistical, corpQueryReq.getIsStatistical());
 
         //如果是区管理员，非超级管理员，只能查看指定区数据，如果是超级管理员，可以查看所有数据，否则只能查看自己创建的数据
 
+        UserPermissionRes userPermissionRes = iCommonBusiness.checkUserPermissions(sysAuth.getId());
+        if(!userPermissionRes.isSuperAdmin() && !userPermissionRes.isSysAdmin()){
+            lambdaQueryWrapper.eq(CorpInfo::getCreateUserId,sysAuth.getId());
+        }
 
-        iCommonBusiness.checkUserPermissions(sysAuth.getId());
-
-//        if (YesNoEnum.NO.getValue().equals(sysAuth.getIsSuperAdmin())) {
-//            if (StringUtils.isNotBlank(sysAuth.getDistrictCode())) {
-//                lambdaQueryWrapper.eq(CorpInfo::getDistrictCode, sysAuth.getDistrictCode());
-//            }
-//        }
-
-
-
-
-
+        if(userPermissionRes.isSysAdmin()){
+            if(CollectionUtils.isNotEmpty(userPermissionRes.getIds())){
+                lambdaQueryWrapper.in(CorpInfo::getDistrictCode,userPermissionRes.getIds());
+            }else {
+                lambdaQueryWrapper.eq(CorpInfo::getCreateUserId,sysAuth.getId());
+            }
+        }
+        lambdaQueryWrapper.orderByDesc(CorpInfo::getUpdateTime);
         Page pageDto = this.page(page, lambdaQueryWrapper);
         List<CorpInfo> records = pageDto.getRecords();
         List<CorpInfoDetail> resList = records.stream().map(x -> {
