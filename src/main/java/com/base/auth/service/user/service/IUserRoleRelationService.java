@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IUserRoleRelationService extends IService<UserRoleRelation> {
 
+    boolean deleteByUserId(Integer id);
 }

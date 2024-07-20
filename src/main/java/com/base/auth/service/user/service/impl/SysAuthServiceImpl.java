@@ -5,15 +5,17 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.base.auth.common.BizException;
 import com.base.auth.entity.SysAuth;
+import com.base.auth.entity.UserDepartment;
+import com.base.auth.entity.UserRoleRelation;
 import com.base.auth.enums.AuthErrorCodeEnum;
 import com.base.auth.enums.DelFlagEnum;
 import com.base.auth.enums.StatusEnum;
 import com.base.auth.mapper.SysAuthMapper;
+import com.base.auth.service.common.service.ICommonBusiness;
 import com.base.auth.service.user.service.ISysAuthService;
-import com.base.auth.to.AddUserReq;
-import com.base.auth.to.AddUserRes;
-import com.base.auth.to.AuthReqTo;
-import com.base.auth.to.AuthResTo;
+import com.base.auth.service.user.service.IUserDepartmentService;
+import com.base.auth.service.user.service.IUserRoleRelationService;
+import com.base.auth.to.*;
 import com.base.auth.util.PasswordSecurityUtils;
 import com.base.auth.util.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +23,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -34,6 +40,15 @@ import java.util.List;
 @Service
 @Slf4j
 public class SysAuthServiceImpl extends ServiceImpl<SysAuthMapper, SysAuth> implements ISysAuthService {
+
+    @Resource
+    ICommonBusiness iCommonBusiness;
+
+    @Resource
+    IUserRoleRelationService iUserRoleRelationService;
+
+    @Resource
+    IUserDepartmentService iUserDepartmentService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -51,12 +66,78 @@ public class SysAuthServiceImpl extends ServiceImpl<SysAuthMapper, SysAuth> impl
             if (!this.save(sysAuth)) {
                 throw new RuntimeException("Failed to save SysAuth");
             }
+            List<UserRoleRelation> userRoleRelationList = registerReq.getRoleIds().stream()
+                    .map(roleId -> {
+                        UserRoleRelation userRoleRelation = new UserRoleRelation();
+                        userRoleRelation.setRoleId(roleId);
+                        userRoleRelation.setUserId(sysAuth.getId());
+                        return userRoleRelation;
+                    }).collect(Collectors.toList());
+
+            if (!userRoleRelationList.isEmpty()) {
+                iUserRoleRelationService.saveBatch(userRoleRelationList);
+            }
+
+            List<UserDepartment> userDepartmentList = registerReq.getDepartmentIds().stream()
+                    .map(departmentId -> {
+                        UserDepartment userDepartment = new UserDepartment();
+                        userDepartment.setUserId(sysAuth.getId());
+                        userDepartment.setDepartmentId(departmentId);
+                        return userDepartment;
+                    }).collect(Collectors.toList());
+            if (!userDepartmentList.isEmpty()) {
+                iUserDepartmentService.saveBatch(userDepartmentList);
+            }
+
             res.setAuthId(sysAuth.getId());
             res.setPrincipal(sysAuth.getPrincipal());
             return res;
         } catch (Exception e) {
             throw new RuntimeException("Error registering user", e);
         }
+    }
+
+    @Override
+    public AddUserRes editUser(AddUserReq addUserReq) {
+        iUserRoleRelationService.deleteByUserId(addUserReq.getId());
+        iUserDepartmentService.deleteByUserId(addUserReq.getId());
+        List<UserRoleRelation> userRoleRelationList = addUserReq.getRoleIds().stream()
+                .map(roleId -> {
+                    UserRoleRelation userRoleRelation = new UserRoleRelation();
+                    userRoleRelation.setRoleId(roleId);
+                    userRoleRelation.setUserId(addUserReq.getId());
+                    return userRoleRelation;
+                }).collect(Collectors.toList());
+
+        if (!userRoleRelationList.isEmpty()) {
+            iUserRoleRelationService.saveBatch(userRoleRelationList);
+        }
+
+        List<UserDepartment> userDepartmentList = addUserReq.getDepartmentIds().stream()
+                .map(departmentId -> {
+                    UserDepartment userDepartment = new UserDepartment();
+                    userDepartment.setUserId(addUserReq.getId());
+                    userDepartment.setDepartmentId(departmentId);
+                    return userDepartment;
+                }).collect(Collectors.toList());
+        if (!userDepartmentList.isEmpty()) {
+            iUserDepartmentService.saveBatch(userDepartmentList);
+        }
+        AddUserRes res = new AddUserRes();
+        res.setAuthId(addUserReq.getId());
+        res.setPrincipal(addUserReq.getPrincipal());
+        return res;
+    }
+
+    @Override
+    public UserDetail info(Integer id) {
+        UserQueryReq userQueryReq = new UserQueryReq();
+        userQueryReq.setAuthId(id);
+        List<UserDetail> userDetailList = this.queryList(userQueryReq, null);
+        if (!userDetailList.isEmpty()) {
+            return userDetailList.get(0);
+        }
+        return null;
     }
 
     private void validateUsernameAndPassword(String principal, String password) {
@@ -101,6 +182,72 @@ public class SysAuthServiceImpl extends ServiceImpl<SysAuthMapper, SysAuth> impl
         log.info("Query SysAuth by principal: {}", principal);
 
         return getByPrincipal(principal);
+    }
+
+    @Override
+    public List<UserDetail> queryList(UserQueryReq userQueryReq, SysAuth sysAuth) {
+        List<UserDetail> userDetailList = new ArrayList<>();
+//        UserPermissionRes userPermissionRes = iCommonBusiness.checkUserPermissions(sysAuth.getId());
+//        if (!userPermissionRes.isSuperAdmin()) {
+//            return null;
+//        }
+        List<UserListDto> userListDtoList = this.baseMapper.queryUserList(userQueryReq);
+        Map<Integer, List<UserListDto>> userMap = userListDtoList.stream().collect(Collectors.groupingBy(UserListDto::getId));
+        userMap.forEach((id, userListDtos) -> {
+            UserDetail userDetail = new UserDetail();
+            userDetail.setId(id);
+            if (!CollectionUtils.isEmpty(userListDtos)) {
+                userDetail.setPrincipal(userListDtos.get(0).getPrincipal());
+            }
+
+            // 将UserListDto中的角色信息转换为UserRoleRes列表，同时去除重复项
+            List<UserRoleRes> roleMains = userListDtos.stream()
+                    .filter(x -> x.getRoleId() != null)
+                    .map(dto -> new UserRoleRes(dto.getRoleId(), dto.getRoleName()))
+                    .collect(Collectors.toMap(
+                            UserRoleRes::getRoleId, // 使用roleId作为Map的key
+                            role -> role,           // value就是UserRoleRes对象本身
+                            (oldValue, newValue) -> oldValue // 解决key冲突时保留旧值
+                    )).values()                 // 获取Map的values集合
+                    .stream()                   // 再次转换为Stream
+                    .collect(Collectors.toList()); // 收集为List
+            if (!roleMains.isEmpty()) {
+                userDetail.setRoleMains(roleMains);
+            }
+
+            // 将UserListDto中的部门信息转换为UserDepartmentRes列表，同时去除重复项
+            List<UserDepartmentRes> departments = userListDtos.stream()
+                    .filter(x -> x.getDepartmentId() != null)
+                    .map(dto -> new UserDepartmentRes(dto.getDepartmentId(), dto.getDepartmentName()))
+                    .collect(Collectors.toMap(
+                            UserDepartmentRes::getDepartmentId,
+                            dept -> dept,
+                            (oldValue, newValue) -> oldValue
+                    )).values()
+                    .stream()
+                    .collect(Collectors.toList());
+            if (!departments.isEmpty()) {
+                userDetail.setDepartments(departments);
+            }
+
+            List<UserMenuRes> userMenuRes = userListDtos.stream()
+                    .filter(x -> x.getMenuId() != null)
+                    .map(dto -> new UserMenuRes(dto.getMenuId(), dto.getMenuName()))
+                    .collect(Collectors.toMap(
+                            UserMenuRes::getMenuId,
+                            dept -> dept,
+                            (oldValue, newValue) -> oldValue
+                    )).values()
+                    .stream()
+                    .collect(Collectors.toList());
+            if (!userMenuRes.isEmpty()) {
+                userDetail.setUserMenuRes(userMenuRes);
+            }
+
+            userDetailList.add(userDetail);
+
+        });
+        return userDetailList;
     }
 
     private void validatePrincipal(String principal) {

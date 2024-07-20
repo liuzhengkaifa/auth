@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IUserDepartmentService extends IService<UserDepartment> {
 
+    boolean deleteByUserId(Integer id);
 }

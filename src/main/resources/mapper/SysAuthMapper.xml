@@ -16,5 +16,27 @@
         <result column="update_user_name" property="updateUserName" />
         <result column="del_flag" property="delFlag" />
     </resultMap>
+    <select id="queryUserList" resultType="com.base.auth.to.UserListDto">
+        select sa.id,
+               sa.principal,
+               rm.id             roleId,
+               rm.role_name      roleName,
+               d.id              departmentId,
+               d.department_name departmentName,
+               menu_id menuId,
+               menu_name menuName
+        from sys_auth sa
+                 left join user_department ud on sa.id = ud.user_id and ud.del_flag = 0
+                 left join department d on ud.department_id = d.id
+                 left join user_role_relation urr on urr.user_id = sa.id and urr.del_flag = 0
+                 left join role_main rm on rm.id = urr.role_id
+                 left join role_menu_relation rmr on rmr.role_id = rm.id and rmr.del_flag = 0
+                 left join menu_info mi on mi.id = rmr.menu_id
+        where sa.status = 1
+          and sa.del_flag = 0
+        <if test="authId != null">
+            and sa.id = #{authId}
+        </if>
+    </select>
 
 </mapper>

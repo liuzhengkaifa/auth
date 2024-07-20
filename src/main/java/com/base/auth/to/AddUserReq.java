@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 /**
  * @author liuzheng
@@ -13,15 +14,19 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class AddUserReq {
 
+    @ApiModelProperty(value = "账号id")
+    private Integer id;
+
     @ApiModelProperty(value = "登录账号", required = true)
     @NotBlank(message = "登录账号不能为空")
     private String principal;
 
-    /**
-     * 凭证/密码
-     */
-    @ApiModelProperty(value = "密码", required = true)
-    @NotBlank(message = "密码不能为空")
+    @ApiModelProperty(value = "密码")
     private String credential;
 
+    @ApiModelProperty(value = "角色id")
+    private List<Integer> roleIds;
+
+    @ApiModelProperty(value = "关联区id")
+    private List<Integer> departmentIds;
 }

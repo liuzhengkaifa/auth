@@ -2,6 +2,10 @@ package com.base.auth.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.base.auth.entity.SysAuth;
+import com.base.auth.to.UserListDto;
+import com.base.auth.to.UserQueryReq;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,5 @@ import com.base.auth.entity.SysAuth;
  */
 public interface SysAuthMapper extends BaseMapper<SysAuth> {
 
+    List<UserListDto> queryUserList(UserQueryReq userQueryReq);
 }

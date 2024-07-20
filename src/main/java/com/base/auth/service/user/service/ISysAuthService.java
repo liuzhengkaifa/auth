@@ -1,11 +1,11 @@
 package com.base.auth.service.user.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.base.auth.common.Response;
 import com.base.auth.entity.SysAuth;
-import com.base.auth.to.AddUserReq;
-import com.base.auth.to.AddUserRes;
-import com.base.auth.to.AuthReqTo;
-import com.base.auth.to.AuthResTo;
+import com.base.auth.to.*;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,7 +17,7 @@ import com.base.auth.to.AuthResTo;
  */
 public interface ISysAuthService extends IService<SysAuth> {
 
-    AddUserRes register(AddUserReq addUserReq) throws Exception;
+    AddUserRes register(AddUserReq addUserReq);
 
     AuthResTo login(AuthReqTo authReq);
     /**
@@ -27,4 +27,10 @@ public interface ISysAuthService extends IService<SysAuth> {
      * @return SysAuth 注册信息。
      */
     SysAuth findByPrincipal(String principal);
+
+    List<UserDetail> queryList(UserQueryReq userQueryReq,SysAuth sysAuth);
+
+    AddUserRes editUser(AddUserReq addUserReq);
+
+    UserDetail info(Integer id);
 }
