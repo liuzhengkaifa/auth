@@ -3,13 +3,13 @@ package com.base.auth.controller;
 import com.base.auth.common.Response;
 import com.base.auth.service.bigdata.service.BigDataService;
 import com.base.auth.to.CorpInfoDetail;
+import com.base.auth.to.QuestionReq;
+import com.base.auth.to.QuestionRes;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
@@ -28,9 +28,9 @@ public class BigDataController {
     @Resource
     BigDataService bigDataService;
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    @ApiOperation(value = "test", httpMethod = "GET")
-    Response test() {
-        return Response.ok(bigDataService.test());
+    @RequestMapping(value = "/question", method = RequestMethod.POST)
+    @ApiOperation(value = "智能体问答", httpMethod = "POST")
+    Response question(@Validated @RequestBody QuestionReq questionReq) {
+        return Response.ok(bigDataService.question(questionReq));
     }
 }
