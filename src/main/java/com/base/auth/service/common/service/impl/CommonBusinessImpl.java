@@ -26,7 +26,7 @@ public class CommonBusinessImpl implements ICommonBusiness {
 
     // 将角色ID定义为常量
     private static final int ROLE_ID_SUPER_ADMIN = 1;
-    private static final int ROLE_ID_SYSTEM_ADMIN = 2;
+    private static final int ROLE_ID_SYSTEM_ADMIN = 3;
 
     @Override
     public UserPermissionRes checkUserPermissions(Integer id) {

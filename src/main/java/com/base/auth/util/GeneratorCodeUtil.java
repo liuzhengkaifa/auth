@@ -32,7 +32,7 @@ public class GeneratorCodeUtil {
 
     public static void main(String[] args) {
         String[][] tables = {
-                {"user", "menu_info"}, {"user", "role_menu_relation"}
+                {"user", "assistant_config"}
         };
         Arrays.stream(tables).forEach(table -> build(table[0], table[1]));
     }

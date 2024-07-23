@@ -1,7 +1,11 @@
 package com.base.auth.service.bigdata.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.base.auth.common.Response;
+import com.base.auth.entity.AssistantConfig;
+import com.base.auth.enums.DelFlagEnum;
 import com.base.auth.service.bigdata.service.BigDataService;
+import com.base.auth.service.user.service.IAssistantConfigService;
 import com.base.auth.to.QuestionReq;
 import com.base.auth.to.QuestionRes;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -33,16 +37,21 @@ public class BigDataServiceImpl implements BigDataService {
     @Resource
     RestTemplate restTemplate;
 
+    @Resource
+    IAssistantConfigService iAssistantConfigService;
+
     private static final String BASE_URL = "https://chatglm.cn/chatglm/assistant-api/v1/";
     private static final String GET_TOKEN_URL = BASE_URL + "get_token";
     private static final String STREAM_URL = BASE_URL + "stream_sync";
 
-    private static final String AASSISTANT_ID = "669b61c9210692db7b5de92b";
-
     @Override
     public Response question(QuestionReq questionReq) {
-        String accessToken = getAccessToken("ec576e63bcd521ce", "9072462c9d7f8d662556c7ca3a44398f");
-        return Response.ok(sendMessage(AASSISTANT_ID, accessToken, questionReq.getPrompt(), null, null, null));
+        List<AssistantConfig> list = iAssistantConfigService.list(new LambdaQueryWrapper<AssistantConfig>()
+                .eq(AssistantConfig::getDelFlag, DelFlagEnum.NOT_DELETE.getValue())
+                .orderByDesc(AssistantConfig::getCreateTime));
+        AssistantConfig assistantConfig = list.get(0);
+        String accessToken = getAccessToken(assistantConfig.getApiKey(), assistantConfig.getApiSecret());
+        return Response.ok(sendMessage(assistantConfig.getAssistantId(), accessToken, questionReq.getPrompt(), null, null, null));
     }
 
     private Response getToken() {
